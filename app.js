@@ -56,52 +56,46 @@ app.get('/api/auth/facebook/callback',
 app.get('/api/authorise/success', authService.isLoggedIn, (req, res) => res.send(`${req.user.firstName} is authorised.`))
 app.get('/api/authorise/failure', (req, res, next) => res.send('You have not authorised Facebook.'))
 
-app.get('/api/posts', (req, res, next) => {
-  db.getUsers().then(users => {
-    if (users.length == 0) return res.send('No data.')
+app.get('/api/posts', async (req, res, next) => {
+  const users = await db.getUsers()
+  if (users.length == 0) return res.send('No data.')
 
-    const requests = users.map( ({ accessToken }) => {
-      return rp({
-        method: 'GET',
-        uri: `https://graph.facebook.com/me/posts`,
-        qs: {
-          'access_token': accessToken,
-          'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture'
-        }
-      })
+  const requests = users.map( ({ accessToken }) => {
+    return rp({
+      method: 'GET',
+      uri: `https://graph.facebook.com/me/posts`,
+      qs: {
+        'access_token': accessToken,
+        'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture'
+      }
     })
-  
-    Promise.all(requests)
-      .then(results => {
-        const parsedResults = results.map(result => JSON.parse(result).data)
-                                      .filter(result => result.length != 0)
-                                      .reduce((prev, curr) => prev.concat(curr), [])
-                                      .filter(entry => 'message' in entry)
+  })
 
-        console.log(JSON.stringify(parsedResults))
-  
-        const messages = parsedResults.map(entry => entry.message)
-        getPrediction(messages)
-          .then(result => {
-            const returnObj = []
+  const results = []
+  for (let req of requests) results.push(await req)
+  const parsedResults = results.map(result => JSON.parse(result).data)
+                              .filter(result => result.length != 0)
+                              .reduce((prev, curr) => prev.concat(curr), [])
+                              .filter(entry => 'message' in entry)
 
-            for (let i = 0; i < result.length; ++i) {
-              const entry = result[i]
-              const fbRes = parsedResults[i]
+  console.log(JSON.stringify(parsedResults))
 
-              if ('picture' in fbRes) entry.picture = fbRes.picture
-              if ('place' in fbRes) entry.place = fbRes.place
-              entry['created_time'] = fbRes['created_time']
+  const messages = parsedResults.map(entry => entry.message)
+  const result = await getPrediction(messages)
+  const returnObj = []
 
-              returnObj.push(entry)
-            }
+  for (let i = 0; i < result.length; ++i) {
+    const entry = result[i]
+    const fbRes = parsedResults[i]
 
-            return res.json(returnObj)
-          })
-          .catch(error => next(new Error(error)))
-      })
-      .catch(error => next(new Error(error)))
-  }).catch(error => next(new Error(error)))
+    if ('picture' in fbRes) entry.picture = fbRes.picture
+    if ('place' in fbRes) entry.place = fbRes.place
+    entry['created_time'] = fbRes['created_time']
+
+    returnObj.push(entry)
+  }
+
+  return res.json(returnObj)
 })
 
 app.get('/reset', (req, res, next) => {
