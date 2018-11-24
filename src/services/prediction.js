@@ -7,12 +7,11 @@ const extract = require('extract-string')
  * Takes in a list of messages (of type string), returns a Promise that resolves to a list of scores (of type int).
  */
 async function getPrediction(messages) {
-  messages = messages.map(entry => [entry])
   const body = {
     'Inputs': {
       'input1': {
         'ColumnNames': ['Text'],
-        'Values': messages
+        'Values': messages.map(entry => [entry])
       }
     }
   }

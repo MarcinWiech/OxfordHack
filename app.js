@@ -77,10 +77,27 @@ app.get('/api/posts', (req, res, next) => {
                                       .filter(result => result.length != 0)
                                       .reduce((prev, curr) => prev.concat(curr), [])
                                       .filter(entry => 'message' in entry)
+
+        console.log(JSON.stringify(parsedResults))
   
         const messages = parsedResults.map(entry => entry.message)
         getPrediction(messages)
-          .then(result => res.json(result))
+          .then(result => {
+            const returnObj = []
+
+            for (let i = 0; i < result.length; ++i) {
+              const entry = result[i]
+              const fbRes = parsedResults[i]
+
+              if ('picture' in fbRes) entry.picture = fbRes.picture
+              if ('place' in fbRes) entry.place = fbRes.place
+              entry['created_time'] = fbRes['created_time']
+
+              returnObj.push(entry)
+            }
+
+            return res.json(returnObj)
+          })
           .catch(error => next(new Error(error)))
       })
       .catch(error => next(new Error(error)))
