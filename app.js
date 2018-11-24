@@ -4,12 +4,13 @@ const expressSession = require('express-session')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const authService = require('./services/authenticate')
+const authService = require('./src/services/authenticate')
 const rp = require('request-promise')
+const path = require('path')
 
 // Services
-const { facebookStrategy } = require('./services/passportStrategy')
-const Database = require('./services/database')
+const { facebookStrategy } = require('./src/services/passportStrategy')
+const Database = require('./src/services/database')
 const db = Database.getInstance()
 
 // App setup
@@ -29,7 +30,6 @@ passport.deserializeUser((obj, done) => done(null, JSON.parse(obj)))
 passport.use(facebookStrategy)
 
 // Routes
-app.get('/', (req, res) => res.send('Hello, world!'))
 app.get('/_health', (req, res) => res.send('OK'))
 
 app.get('/api/authorise', (req, res) => res.redirect('/api/auth/facebook'))
@@ -66,6 +66,10 @@ app.get('/api/posts', (req, res, next) => {
     .catch(error => next(new Error(error)))
 })
 
+// Static routes
+app.get('/', (req, res) => res.redirect('/index'))
+app.use('/index', express.static(path.join(__dirname, '/public/index.html')))
+app.use('/assets', express.static(path.join(__dirname, '/public/assets')))
 app.use('*', (req, res, next) => next(new Error('Cannot get path.')))
 
 // Error handler
