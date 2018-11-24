@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const authService = require('./src/services/authenticate')
 const rp = require('request-promise')
 const path = require('path')
-const mysql = require('mysql')
+const { Connection, Request } = require('tedious')
 
 // Services
 const { facebookStrategy } = require('./src/services/passportStrategy')
@@ -16,9 +16,22 @@ const Database = require('./src/services/database')
 const db = Database.getInstance()
 
 // Database setup
-// const connection = mysql.createConnection({
+// const config = {
+//   userName: 'oh2018',
+//   password: 'OxfordHack@2018',
+//   server: 'oh2018-disaster.database.windows.net',
+//   options: {
+//     database: 'users',
+//     encrypt: true
+//   }
+// }
 
+// const conn = new Connection(config)
+// conn.on('connect', (err) => {
+//   if (err) console.error(err)
+//   else console.log('Connected!')
 // })
+
 
 // App setup
 const PORT = process.env.PORT || 3000
@@ -27,6 +40,16 @@ app.use(expressSession({ secret: 'secret', resave: true, saveUninitialized: true
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  )
+  next()
+})
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -52,31 +75,39 @@ app.get('/api/authorise/success', authService.isLoggedIn, (req, res) => res.send
 app.get('/api/authorise/failure', (req, res, next) => res.send('You have not authorised Facebook.'))
 
 app.get('/api/posts', (req, res, next) => {
-  const requests = db.users.map( ({ accessToken }) => {
-    return rp({
-      method: 'GET',
-      uri: `https://graph.facebook.com/me/posts`,
-      qs: {
-        'access_token': accessToken,
-        'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture'
-      }
+  db.getUsers().then(users => {
+    if (users.length == 0) return res.send('No data.')
+
+    const requests = users.map( ({ accessToken }) => {
+      return rp({
+        method: 'GET',
+        uri: `https://graph.facebook.com/me/posts`,
+        qs: {
+          'access_token': accessToken,
+          'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture'
+        }
+      })
     })
-  })
+  
+    Promise.all(requests)
+      .then(results => {
+        const parsedResults = results.map(result => JSON.parse(result).data)
+                                      .filter(result => result.length != 0)
+                                      .reduce((prev, curr) => prev.concat(curr), [])
+                                      .filter(entry => 'message' in entry)
+  
+        let messages = parsedResults.map(entry => entry.message)
+  
+        getPrediction(messages)
+          .then(result => res.json(result))
+          .catch(error => next(new Error(error)))
+      })
+      .catch(error => next(new Error(error)))
+  }).catch(error => next(new Error(error)))
+})
 
-  Promise.all(requests)
-    .then(results => {
-      const parsedResults = results.map(result => JSON.parse(result).data)
-                                    .filter(result => result.length != 0)
-                                    .reduce((prev, curr) => prev.concat(curr), [])
-                                    .filter(entry => 'message' in entry)
-
-      let messages = parsedResults.map(entry => entry.message)
-
-      getPrediction(messages)
-        .then(result => res.json(result))
-        .catch(error => next(new Error(error)))
-    })
-    .catch(error => next(new Error(error)))
+app.get('/reset', (req, res, next) => {
+  db.delete(null).then(result => res.send('OK')).catch(error => next(error))
 })
 
 // Static routes
