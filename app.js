@@ -7,31 +7,12 @@ const bodyParser = require('body-parser')
 const authService = require('./src/services/authenticate')
 const rp = require('request-promise')
 const path = require('path')
-const { Connection, Request } = require('tedious')
 
 // Services
 const { facebookStrategy } = require('./src/services/passportStrategy')
 const { getPrediction } =  require('./src/services/prediction')
 const Database = require('./src/services/database')
 const db = Database.getInstance()
-
-// Database setup
-// const config = {
-//   userName: 'oh2018',
-//   password: 'OxfordHack@2018',
-//   server: 'oh2018-disaster.database.windows.net',
-//   options: {
-//     database: 'users',
-//     encrypt: true
-//   }
-// }
-
-// const conn = new Connection(config)
-// conn.on('connect', (err) => {
-//   if (err) console.error(err)
-//   else console.log('Connected!')
-// })
-
 
 // App setup
 const PORT = process.env.PORT || 3000
@@ -41,6 +22,7 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+// CORS
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
   res.header(
@@ -96,8 +78,7 @@ app.get('/api/posts', (req, res, next) => {
                                       .reduce((prev, curr) => prev.concat(curr), [])
                                       .filter(entry => 'message' in entry)
   
-        let messages = parsedResults.map(entry => entry.message)
-  
+        const messages = parsedResults.map(entry => entry.message)
         getPrediction(messages)
           .then(result => res.json(result))
           .catch(error => next(new Error(error)))
