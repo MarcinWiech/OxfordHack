@@ -23,11 +23,12 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
-    "mysql": "^2.16.0",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "tedious": "^3.0.1",
+    "tedious-promises": "^0.4.1"
   },
   "devDependencies": {
     "morgan": "^1.9.1",
