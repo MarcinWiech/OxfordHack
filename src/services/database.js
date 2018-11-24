@@ -32,11 +32,6 @@ class Database {
   }
 
   async add(user) {
-    // for (let { id } of testUsers) {
-    //   if (id == user.id) return
-    // }
-    // this.users.push(user)
-
     const { id, accessToken } = user
     const res = await tp.sql(`SELECT * FROM FacebookUser WHERE id = ${id}`).execute()
 
