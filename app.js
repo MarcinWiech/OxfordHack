@@ -61,6 +61,7 @@ app.get('/api/posts', (req, res, next) => {
     .then(results => {
       const parsedResults = results.map(result => JSON.parse(result).data)
                                     .filter(result => result.length != 0)
+                                    .reduce((prev, curr) => prev.concat(curr), [])
       res.json(parsedResults)
     })
     .catch(error => next(new Error(error)))
