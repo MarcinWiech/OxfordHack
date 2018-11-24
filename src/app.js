@@ -1,27 +1,77 @@
 // Dependencies
 const express = require('express')
+const expressSession = require('express-session')
 const passport = require('passport')
+const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
+const authService = require('./services/authenticate')
+const rp = require('request-promise')
 
 // Services
 const { facebookStrategy } = require('./services/passportStrategy')
-
+const Database = require('./services/database')
+const db = Database.getInstance()
 
 // App setup
 const PORT = process.env.PORT || 3000
 const app = express()
+app.use(expressSession({ secret: 'secret', resave: true, saveUninitialized: true }))
+app.use(cookieParser())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 app.use(passport.initialize())
 app.use(passport.session())
 
 // Passport setup
-passport.serializeUser((user, done) => done(null, user))
-passport.deserializeUser((obj, done) => done(null, obj))
+passport.serializeUser((user, done) => done(null, JSON.stringify(user)))
+passport.deserializeUser((obj, done) => done(null, JSON.parse(obj)))
 
-passport.use('facebook', facebookStrategy)
-
-
+passport.use(facebookStrategy)
 
 // Routes
+app.get('/', (req, res) => res.send('Hello, world!'))
 app.get('/_health', (req, res) => res.send('OK'))
 
+app.get('/api/authorise', (req, res) => res.redirect('/api/auth/facebook'))
+
+app.get('/api/auth/facebook', 
+        passport.authenticate('facebook', { scope: ['user_posts'] }))
+
+app.get('/api/auth/facebook/callback', 
+        passport.authenticate('facebook', { successRedirect: '/api/authorise/success',    
+                                            failureRedirect: '/api/authorise/failure' }))
+
+app.get('/api/authorise/success', authService.isLoggedIn, (req, res) => res.send(`${req.user.firstName} is authorised.`))
+app.get('/api/authorise/failure', (req, res, next) => res.send('You have not authorised Facebook.'))
+
+app.get('/api/posts', (req, res, next) => {
+  const requests = []
+  for (let { id, accessToken } of db.users) {
+    requests.push(rp({
+      method: 'GET',
+      uri: `https://graph.facebook.com/me/posts`,
+      qs: {
+        'access_token': accessToken,
+        'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture'
+      }
+    }))
+  }
+
+  Promise.all(requests)
+    .then(results => {
+      const parsedResults = results.map(result => JSON.parse(result).data)
+                                    .filter(result => result.length != 0)
+      res.json(parsedResults)
+    })
+    .catch(error => next(new Error(error)))
+})
+
+app.use('*', (req, res, next) => next(new Error('Cannot get path.')))
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err)
+  res.status(400).send(`Error: ${err.message}`)
+})
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
