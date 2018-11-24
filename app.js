@@ -45,17 +45,16 @@ app.get('/api/authorise/success', authService.isLoggedIn, (req, res) => res.send
 app.get('/api/authorise/failure', (req, res, next) => res.send('You have not authorised Facebook.'))
 
 app.get('/api/posts', (req, res, next) => {
-  const requests = []
-  for (let { id, accessToken } of db.users) {
-    requests.push(rp({
+  const requests = db.users.map( ({ accessToken }) => {
+    return rp({
       method: 'GET',
       uri: `https://graph.facebook.com/me/posts`,
       qs: {
         'access_token': accessToken,
         'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture'
       }
-    }))
-  }
+    })
+  })
 
   Promise.all(requests)
     .then(results => {
