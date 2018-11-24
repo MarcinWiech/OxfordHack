@@ -5,10 +5,8 @@
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </head>
 <body>
@@ -41,66 +39,12 @@
             <div class="col" style="padding: 0 !important;">
                 <div style="position: relative;margin-bottom: 2rem; text-align: center;">
                     <div class="centered"><b>Where supermen are born</b></div>
-                    <img src="image.jpg"  class="img-responsive" alt="Cinque Terre" style="width: 100%; box-shadow: 0 30px 30px -30px rgba(0,0,0,.3); z-index: 20">
+                    <img src="assets/image.jpg" class="img-responsive" alt="Cinque Terre" style="width: 100%; box-shadow: 0 30px 30px -30px rgba(0,0,0,.3); z-index: 20">
                 </div>
                 <div style="padding: 1rem">
-                    <div class="card shadow-sm p-3 mb-5 bg-white rounded" style="margin: 0.5rem !important;">
-                        <div class="card-body">
-                            <p class="card-title" style="text-underline: #1b1e21">John Banana</p>
-                            <p class="card-text">Help asap. Deadline tomorrow!</p>
-                            <div style="float: right">
-                                <button type="button" class="btn btn-outline-success">upvote</button>
-                                <button type="button" class="btn btn-outline-danger">downvote</button>
-                                <button type="button" class="btn btn-outline-primary">helping</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card shadow-sm p-3 mb-5 bg-white rounded" style="margin: 0.5rem !important;">
-                        <div class="card-body">
-                            <p class="card-title" style="text-underline: #1b1e21">John Banana</p>
-                            <p class="card-text">Help asap. Deadline tomorrow!</p>
-                            <div style="float: right">
-                                <button type="button" class="btn btn-outline-success">upvote</button>
-                                <button type="button" class="btn btn-outline-danger">downvote</button>
-                                <button type="button" class="btn btn-outline-primary">helping</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card shadow-sm p-3 mb-5 bg-white rounded" style="margin: 0.5rem !important;">
-                        <div class="card-body">
-                            <p class="card-title" style="text-underline: #1b1e21">John Banana</p>
-                            <p class="card-text">Help asap. Deadline tomorrow!</p>
-                            <div style="float: right">
-                                <button type="button" class="btn btn-outline-success">upvote</button>
-                                <button type="button" class="btn btn-outline-danger">downvote</button>
-                                <button type="button" class="btn btn-outline-primary">helping</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card shadow-sm p-3 mb-5 bg-white rounded" style="margin: 0.5rem !important;">
-                        <div class="card-body">
-                            <p class="card-title" style="text-underline: #1b1e21">John Banana</p>
-                            <p class="card-text">Help asap. Deadline tomorrow!</p>
-                            <div style="float: right">
-                                <button type="button" class="btn btn-outline-success">upvote</button>
-                                <button type="button" class="btn btn-outline-danger">downvote</button>
-                                <button type="button" class="btn btn-outline-primary">helping</button>
-                            </div>
-                        </div>
-                    </div>
 
- 		    <div>
-                        <script type="text/javascript" src="app.js">
-                            function httpGet(theUrl)
-                            {
-                                var xmlHttp = new XMLHttpRequest();
-                                xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-                                xmlHttp.send( null );
-                                return xmlHttp.responseText;
-                            }
+                    <div id="res">
 
-                            httpGet('./api/posts')
-                        </script>
 
 
 
@@ -114,6 +58,45 @@
     </div>
 </div>
 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    // function httpGet(theUrl)
+    // {
+    //     var xmlHttp = new XMLHttpRequest();
+    //     xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    //     xmlHttp.send( null );
+    //     return xmlHttp.responseText;
+    // }
+    //
+    // httpGet('http://localhost:3000/api/posts')
+
+
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/api/posts',
+        success: msg => msg.forEach(obj => document.getElementById('res').innerHTML += buildCard(obj)),
+        error: err => alert(JSON.stringify(err))
+    })
+
+    function buildCard(response) {
+        const { message, danger } = response
+
+        return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;">
+                                    <div class="card-body">
+                                        <p class="card-title" style="text-underline: #1b1e21">${danger}</p>
+                                        <p class="card-text">${message}</p>
+                                        <div style="float: right">
+                                            <button type="button" class="btn btn-outline-success">upvote</button>
+                                            <button type="button" class="btn btn-outline-danger">downvote</button>
+                                            <button type="button" class="btn btn-outline-primary">helping</button>
+                                        </div>
+                                    </div>`
+    }
+</script>
 
 </body>
 </html>
