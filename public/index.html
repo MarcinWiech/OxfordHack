@@ -88,6 +88,25 @@
                             </div>
                         </div>
                     </div>
+
+ 		    <div>
+                        <script type="text/javascript" src="app.js">
+                            function httpGet(theUrl)
+                            {
+                                var xmlHttp = new XMLHttpRequest();
+                                xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+                                xmlHttp.send( null );
+                                return xmlHttp.responseText;
+                            }
+
+                            httpGet('./api/posts')
+                        </script>
+
+
+
+
+
+                    </div>
                 </div>
             </div>
         </div>
