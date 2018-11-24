@@ -1,11 +1,12 @@
 .centered {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 10%);
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*transform: translate(-50%, 10%);*/
     color: white;
-    font-size: 4rem;
+    /*font-size: 4rem;*/
     width: 100%;
+    margin-top: -15%;
 
     /*text-shadow: -1px 0 #afa2a2, 0 1px #afa2a2, 1px 0 #afa2a2, 0 -1px #afa2a2;*/
 }
