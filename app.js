@@ -7,11 +7,18 @@ const bodyParser = require('body-parser')
 const authService = require('./src/services/authenticate')
 const rp = require('request-promise')
 const path = require('path')
+const mysql = require('mysql')
 
 // Services
 const { facebookStrategy } = require('./src/services/passportStrategy')
+const { getPrediction } =  require('./src/services/prediction')
 const Database = require('./src/services/database')
 const db = Database.getInstance()
+
+// Database setup
+// const connection = mysql.createConnection({
+
+// })
 
 // App setup
 const PORT = process.env.PORT || 3000
@@ -61,7 +68,13 @@ app.get('/api/posts', (req, res, next) => {
       const parsedResults = results.map(result => JSON.parse(result).data)
                                     .filter(result => result.length != 0)
                                     .reduce((prev, curr) => prev.concat(curr), [])
-      res.json(parsedResults)
+                                    .filter(entry => 'message' in entry)
+
+      let messages = parsedResults.map(entry => entry.message)
+
+      getPrediction(messages)
+        .then(result => res.json(result))
+        .catch(error => next(new Error(error)))
     })
     .catch(error => next(new Error(error)))
 })
