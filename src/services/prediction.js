@@ -27,7 +27,10 @@ async function getPrediction(messages) {
     }
   })
 
+  console.log(JSON.stringify(response.Results))
+
   let values = response.Results.output1.value.Values
+  console.log()
   values = values.reduce((prev, curr) => prev.concat(curr), [])
   values = values.map(Number)
 

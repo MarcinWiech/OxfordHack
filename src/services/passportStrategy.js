@@ -9,18 +9,18 @@ const facebookStrategy = new Strategy({
   clientSecret: '77dcccaddbd648ad2266d21e7ed641ce',
   callbackURL: 'http://localhost:3000/api/auth/facebook/callback'
 }, (accessToken, refreshToken, profile, done) => {
-  console.log(accessToken)
+  // console.log(accessToken)
   const user = {}
-  user.id = profile.id
+  user.id = Number(profile.id)
   user.accessToken = accessToken
   user.refreshToken = refreshToken
   user.firstName = profile.displayName
   user.lastName = profile.name.lastName
 
-  console.log(JSON.stringify(user))
-
   db.add(user)
-  done(null, user)
+    .then(_ => done(null, user))
+    .catch(err => done(err, null))
+  // done(null, user)
 })
 
 module.exports = {
