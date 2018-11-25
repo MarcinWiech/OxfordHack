@@ -1,8 +1,10 @@
 
 var testData = {
     max: 1000,
-    data: [{lat: 51.77, lng: -1.24, count: 10}, {lat: 52.77, lng: -1.8, count: 2},{lat: 53.77, lng: -1.6, count: 10},]
-  }
+    data: [{lat: 51.77, lng: -1.24, count: 10}, {lat: 52.77, lng: -1.8, count: 2},{lat: 53.77, lng: -1.6, count: 10}]
+  };
+
+
 
 //make testData dependant on the posts
 
@@ -15,15 +17,18 @@ $.ajax({
 });
 
 function buildCard(response) {
-    const {latitude, longitude} = response;
+    const {place} = response;
+    const { lat, long } = place
 
-    if(latitude === undefined || longitude === undefined){
+    if(lat === undefined || long === undefined){
         return null;
     }
     else{
-        testData.data.push({lat: latitude, lng: longitude, count: 5})
+        testData.data.push({lat: lat, lng: long, count: 5})
     }
 
 }
+
+setData(testData);
 
 
