@@ -99,20 +99,7 @@
                 <div style="padding: 1rem">
 
                     <div id="res">
-                        <div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;">
-                            <div class="card-body">
-                                <p style="float: right">Location</p>
-                                <p style="float: right; margin-right: 5%">Date</p>
-                                <p class="card-title" style="text-underline: #1b1e21">${danger}</p>
 
-                                <p class="card-text">${message}</p>
-                                <div style="float: right">
-                                    <button type="button" class="btn btn-outline-success">upvote</button>
-                                    <button type="button" class="btn btn-outline-danger">downvote</button>
-                                    <button type="button" class="btn btn-outline-primary">helping</button>
-                                </div>
-                            </div>
-                        </div>
 
 
 
@@ -156,19 +143,50 @@
     })
 
     function buildCard(response) {
-        const { message, danger, place } = response;
+        const { message, danger, place, created_time, profile, original_message, language} = response;
+
+        let margin = `0`
+        let placeName = ``;
+        if(place !== undefined) {
+            placeName = `Location: <b>`+place.name+`</b>`;
+            margin = `3`;
+        }
+
+        let profileName = ``;
+        if(profile !== undefined) {
+            profileName = profile;
+        }
+
+        let original_message_var = ``;
+        if(original_message !== undefined) {
+            original_message_var = original_message;
+        }
+
+        let language_var = ``;
+
+        if(language !== undefined && original_message !== undefined) {
+            language_var = `Original message `+`(`+language+`): `;
+        }
+
+
+
         if(true === true) {
             return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;">
-                                    <div class="card-body">
-                                        <p class="card-title" style="text-underline: #1b1e21">${danger}</p>
-                                        <p class="card-text">${message}</p>
-                                        <div style="float: right">
-                                            <button type="button" class="btn btn-outline-success">upvote</button>
-                                            <button type="button" class="btn btn-outline-danger">downvote</button>
-                                            <button type="button" class="btn btn-outline-primary">helping</button>
-                                        </div>
-                                    </div>
-                </div>`
+                            <div class="card-body">
+                                <p style="float: right">${placeName}</p>
+                                <p style="float: right; margin-right: ${margin}%">Date posted: ${created_time}</p>
+                                <p class="card-title" style="text-underline: #1b1e21">${profileName}</p>
+
+                                <p class="card-text">${message}</p>
+                                <p class="card-text">${language_var} ${original_message_var}</p>
+
+                                <div style="float: right">
+                                    <button type="button" class="btn btn-outline-success">upvote</button>
+                                    <button type="button" class="btn btn-outline-danger">downvote</button>
+                                    <button type="button" class="btn btn-outline-primary">helping</button>
+                                </div>
+                            </div>
+                        </div>`
         }
 
         return ``;
