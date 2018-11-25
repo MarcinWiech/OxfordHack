@@ -227,7 +227,7 @@
             let margin = `0`;
             let placeName = ``;
             if (place !== undefined) {
-                placeName = `Location: <b>` + place.name + `</b>`;
+                placeName = `<b>Location</b>: ` + place.name + ``;
                 margin = `3`;
             }
 
@@ -256,15 +256,13 @@
             //     }
 
             // }
-            
+
 
             return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'white' : 'white'} rounded" style="margin: 0.5rem !important;" id="${postID}">
                         <div class="card-body">
                             <p style="float: right">${placeName}</p>
-                            <p style="float: right; margin-right: ${margin}%">Date posted: ${created_time}</p>
-                            <p class="card-title" style="text-underline: #1b1e21" href="${profileName}">User profile</p>
-
-                            <p class="card-text">${message}</p>
+                            <p style="float: right; margin-right: ${margin}%"><b>Date posted</b>: ${created_time}</p>
+                            <p class="card-text" style="margin-top: 50px">${message}</p>
                             <p class="card-text">${language_var} ${original_message_var}</p>
 
                             <div style="float: right">
