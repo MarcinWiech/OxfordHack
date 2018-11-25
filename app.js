@@ -1,3 +1,5 @@
+const ENABLE_REFRESH = false
+
 // Dependencies
 const express = require('express')
 const expressSession = require('express-session')
@@ -14,6 +16,7 @@ const { facebookStrategy } = require('./src/services/passportStrategy')
 const { getPrediction } = require('./src/services/prediction')
 const { getTranslations } = require('./src/services/translation')
 const { categoriseMessage } = require('./src/services/analytics')
+const { getTweets } = require('./src/services/twitter')
 const Database = require('./src/services/database')
 const db = Database.getInstance()
 
@@ -74,8 +77,13 @@ app.get('/api/authorise/success', authService.isLoggedIn, (req, res) => res.send
 app.get('/api/authorise/failure', (req, res, next) => res.send('You have not authorised Facebook.'))
 
 app.get('/api/posts', async (req, res, next) => {
+  const fbData = await getFBPosts()
+  return res.json(fbData)
+})
+
+async function getFBPosts() {
   const users = await db.getUsers()
-  if (users.length == 0) return res.send('No data.')
+  if (users.length == 0) return []
 
   const requests = users.map(({ accessToken }) => {
     return rp({
@@ -98,8 +106,8 @@ app.get('/api/posts', async (req, res, next) => {
   // console.log(JSON.stringify(parsedResults))
 
   const returnObj = await processFBData(parsedResults)
-  return res.json(returnObj)
-})
+  return returnObj
+}
 
 async function processFBData(parsedResults) {
   const messages = parsedResults.map(entry => entry.message)
@@ -146,9 +154,9 @@ app.get('/', (req, res) => res.redirect('/index'))
 app.use('/index', express.static(path.join(__dirname, '/public/index.html')))
 app.use('/assets', express.static(path.join(__dirname, '/public/assets')))
 
-const { getTweet } = require('./src/services/twitter')
+
 app.get('/twitter', async (req, res, next) => {
-  const result = await getTweet()
+  const result = await getTweets()
   console.log(result)
   res.send('OK')
 })
@@ -161,7 +169,10 @@ app.use((err, req, res, next) => {
   res.status(400).send(`Error: ${err.message}`)
 })
 
-const REFRESH_RATE = 2000
+server.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
+
+if (ENABLE_REFRESH) {
+  const REFRESH_RATE = 2000
 
 let init = true
 let postIds = new Set()
@@ -196,7 +207,7 @@ function infinitePoll() {
   })
 
   promise.then(res => {
-    console.log(res)
+    console.log('Refreshed!')
     const additions = []
     for (let data of res) {
       const { postID } = data
@@ -221,5 +232,4 @@ function infinitePoll() {
 }
 
 infinitePoll()
-
-server.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
+}
