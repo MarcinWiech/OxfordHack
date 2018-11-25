@@ -17,9 +17,15 @@ async function getTweets() {
 
       results.forEach(message => {
         message.message = encoder.decode(message.messageText)
+        console.log(message.message)
+        //2018-11-25T09:00:45
+
+        const words = message.message.split(' ')
+        message.created_time = words[0]
+
+        message.message = words.slice(1).join(' ')
+
         message.postID = message.messageId
-
-
         queue.deleteMessage('oxfordhack', message.message, message.popReceipt, (err) => {
           if (!error) console.log(`${message.messageId} deleted.`)
         })
