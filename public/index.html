@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <style>
+        .bg-danger {
+            background-color: rgba(253, 171, 164, 0.5) !important;
+        }
+
+        a.btn.btn-outline-primary:hover {
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -51,40 +61,56 @@
                         <div aria-labelledby="headingTwo" data-parent="#accordionExample" style="padding-left: 4%">
                             <div class="card-body" style="color: #0d5baa; padding: 0"></div>
                             <li class="nav-item active sideitem">
-                                <a id="all" class="nav-link" href="#" onclick="filterByCategory('all');" style="font-size:1vw;">All <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a> 
+                                <a id="all" class="nav-link" href="#" onclick="filterByCategory('all');" style="font-size:1vw;">All
+                                    <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="clothes" class="nav-link" href="#" onclick="filterByCategory('clothes');" style="font-size:1vw;">Clothes <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="clothes" class="nav-link" href="#" onclick="filterByCategory('clothes');" style="font-size:1vw;">Clothes
+                                    <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="toiletries" class="nav-link" href="#" onclick="filterByCategory('toiletries');" style="font-size:1vw;">Toiletries <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="toiletries" class="nav-link" href="#" onclick="filterByCategory('toiletries');"
+                                    style="font-size:1vw;">Toiletries <span class="sr-only">(current)</span> <span
+                                        class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="babySupplies" class="nav-link" href="#" onclick="filterByCategory('babySupplies');" style="font-size:1vw;">Baby Supplies <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="babySupplies" class="nav-link" href="#" onclick="filterByCategory('babySupplies');"
+                                    style="font-size:1vw;">Baby Supplies <span class="sr-only">(current)</span> <span
+                                        class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="fuel" class="nav-link" href="#" onclick="filterByCategory('fuel');" style="font-size:1vw;">Fuel <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="fuel" class="nav-link" href="#" onclick="filterByCategory('fuel');" style="font-size:1vw;">Fuel
+                                    <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="petSupplies" class="nav-link" href="#" onclick="filterByCategory('petSupplies');" style="font-size:1vw;">Pet Supplies <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="petSupplies" class="nav-link" href="#" onclick="filterByCategory('petSupplies');"
+                                    style="font-size:1vw;">Pet Supplies <span class="sr-only">(current)</span> <span
+                                        class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="equipment" class="nav-link" href="#" onclick="filterByCategory('equipment');" style="font-size:1vw;">Equipment <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="equipment" class="nav-link" href="#" onclick="filterByCategory('equipment');"
+                                    style="font-size:1vw;">Equipment <span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="water" class="nav-link" href="#" onclick="filterByCategory('water');" style="font-size:1vw;">Water<span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="water" class="nav-link" href="#" onclick="filterByCategory('water');" style="font-size:1vw;">Water<span
+                                        class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="shelter" class="nav-link" href="#" onclick="filterByCategory('shelter');" style="font-size:1vw;">Shelter<span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="shelter" class="nav-link" href="#" onclick="filterByCategory('shelter');" style="font-size:1vw;">Shelter<span
+                                        class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="food" class="nav-link" href="#" onclick="filterByCategory('food');" style="font-size:1vw;">Food<span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="food" class="nav-link" href="#" onclick="filterByCategory('food');" style="font-size:1vw;">Food<span
+                                        class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="other" class="nav-link" href="#" onclick="filterByCategory('other');" style="font-size:1vw;">Other<span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="other" class="nav-link" href="#" onclick="filterByCategory('other');" style="font-size:1vw;">Other<span
+                                        class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a id="volunteerWork" class="nav-link" href="#" onclick="filterByCategory('volunteerWork');" style="font-size:1vw;">Volunteer Work<span class="sr-only">(current)</span> <span class="badge badge-primary"></span></a>
+                                <a id="volunteerWork" class="nav-link" href="#" onclick="filterByCategory('volunteerWork');"
+                                    style="font-size:1vw;">Volunteer Work<span class="sr-only">(current)</span> <span
+                                        class="badge badge-primary"></span></a>
                             </li>
                         </div>
                     </div>
@@ -157,7 +183,7 @@
 
                     document.getElementById('res').innerHTML += buildCard(obj)
                 })
-                
+
                 for (let cat in master) {
                     console.log(cat)
                     document.querySelector(`#${cat} > .badge`).innerHTML = master[cat].length
@@ -165,6 +191,21 @@
             },
             error: err => console.error(JSON.stringify(err))
         });
+
+        const badVotes = {}
+
+        function downVote(postID) {
+            if (!(postID in badVotes)) {
+                badVotes[postID] = 1
+            } else if (++badVotes[postID] == 3) {
+                // delete from category
+                for (let cat in master) {
+                    master[cat] = master[cat].filter(x => x != postID)
+                }
+
+                document.getElementById(postID).remove()
+            }
+        }
 
 
         let categories = undefined
@@ -216,8 +257,8 @@
 
                             <div style="float: right">
                                 <button type="button" class="btn btn-outline-success">upvote</button>
-                                <button type="button" class="btn btn-outline-danger">downvote</button>
-                                <button type="button" class="btn btn-outline-primary">helping</button>
+                                <button type="button" onclick="downVote('${postID}')" class="btn btn-outline-danger">downvote</button>
+                                <a href="${profileName}" target="_blank" role="button" class="btn btn-outline-primary">help</a>
                             </div>
                         </div>
                     </div>`
@@ -233,7 +274,7 @@
 
             // Hide all
             for (let id of master['all']) document.getElementById(id).style.display = 'none'
-            
+
             // Show relevant
             console.log(master[category])
             for (let id of master[category]) document.getElementById(id).style.display = 'block'
