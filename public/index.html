@@ -34,7 +34,57 @@
 </div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-2"></div>
+        <div class="col-2" style="margin-top:70px; z-index: 10;">
+            <div class="accordion" id="accordionExample">
+                <div class="p-1 mb-1 bg-light text-dark" style="text-align: center; height: 60px">
+                        <h4 class="font-weight-bold text-center" style="color: #0d5baa">Category</h4>
+                </div>
+                <div class="card">
+                    <div aria-labelledby="headingTwo" data-parent="#accordionExample" style="padding-left: 5%">
+                        <div class="card-body" style="color: #0d5baa">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Clothes <span class="sr-only" >(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Toiletries <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Baby Supplies <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Fuel <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Pet Supplies <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Pet Supplies <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Equipment <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Water<span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Shelter<span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Food<span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Other<span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#" style="font-size:1vw;">Volunteer Work<span class="sr-only">(current)</span></a>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
         <div class="col-8 shadow-sm p-3 mb-5 bg-white rounded" style="margin-top:50px; z-index: 10; padding: 0 !important;">
             <div class="col" style="padding: 0 !important;">
                 <div style="position: relative;text-align: center;">
@@ -45,7 +95,20 @@
                 <div style="padding: 1rem">
 
                     <div id="res">
+                        <div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;">
+                            <div class="card-body">
+                                <p style="float: right">Location</p>
+                                <p style="float: right; margin-right: 5%">Date</p>
+                                <p class="card-title" style="text-underline: #1b1e21">${danger}</p>
 
+                                <p class="card-text">${message}</p>
+                                <div style="float: right">
+                                    <button type="button" class="btn btn-outline-success">upvote</button>
+                                    <button type="button" class="btn btn-outline-danger">downvote</button>
+                                    <button type="button" class="btn btn-outline-primary">helping</button>
+                                </div>
+                            </div>
+                        </div>
 
 
 
@@ -58,7 +121,12 @@
         <div class="col-2"></div>
     </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -84,9 +152,9 @@
     })
 
     function buildCard(response) {
-        const { message, danger } = response
-
-        return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;">
+        const { message, danger } = response;
+        if(danger === true) {
+            return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;">
                                     <div class="card-body">
                                         <p class="card-title" style="text-underline: #1b1e21">${danger}</p>
                                         <p class="card-text">${message}</p>
@@ -97,6 +165,9 @@
                                         </div>
                                     </div>
                 </div>`
+        }
+
+        return ``;
     }
 
 

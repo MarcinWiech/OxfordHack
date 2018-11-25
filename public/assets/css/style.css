@@ -14,6 +14,7 @@
 body {
     font-family: 'Open Sans', sans-serif;
     background-color: #e3e8e8;
+    color: #0d5baa;
 
 }
 
@@ -25,4 +26,8 @@ body {
     background-color: white;
     width: 100%;
     box-shadow: 0 4px 4px -4px rgba(0,0,0,.2);
+}
+
+.res {
+    color: #0d5baa;
 }
