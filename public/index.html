@@ -40,7 +40,7 @@
                         <a class="nav-link" href="/index">Home<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/assets/js/Heatmap/heatmap.js-master/examples/googlemaps-heatmap/index.html">Map</a>
+                        <a class="nav-link" href="assets/js/Heatmap/heatmap.js-master/examples/googlemaps-heatmap/index.html">Map</a>
                     </li>
                 </ul>
                 <div style="float: right; width: 100%">
@@ -220,10 +220,14 @@
         function buildCard(response) {
             const { message, danger, place, created_time, profile, original_message, language, postID } = response;
 
+            if(danger === false){
+                return ``;
+            }
+
             let margin = `0`;
             let placeName = ``;
             if (place !== undefined) {
-                placeName = `Location: <b>` + place.name + `</b>`;
+                placeName = `<b>Location</b>: ` + place.name + ``;
                 margin = `3`;
             }
 
@@ -253,13 +257,12 @@
 
             // }
 
-            return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;" id="${postID}">
+
+            return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'white' : 'white'} rounded" style="margin: 0.5rem !important;" id="${postID}">
                         <div class="card-body">
                             <p style="float: right">${placeName}</p>
-                            <p style="float: right; margin-right: ${margin}%">Date posted: ${created_time ? (created_time.substring(0, 10) + " " + created_time.substring(11,19)) : ""}</p>
-                            <p class="card-title" style="text-underline: #1b1e21" href="${profileName}">User profile</p>
-
-                            <p class="card-text">${message}</p>
+                            <p style="float: right; margin-right: ${margin}%"><b>Date posted</b>: ${created_time ? (created_time.substring(0, 10) + " " + created_time.substring(11, 19)) : ''}</p>
+                            <p class="card-text" style="margin-top: 50px">${message}</p>
                             <p class="card-text">${language_var} ${original_message_var}</p>
 
                             <div style="float: right">
@@ -361,7 +364,7 @@
         const socket = io('http://localhost:3000')
 
         socket.on('connect', () => {
-            console.log('hello')
+            q
         })
 
         socket.on('all', data => {
