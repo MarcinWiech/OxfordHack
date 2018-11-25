@@ -10,8 +10,9 @@ const path = require('path')
 
 // Services
 const { facebookStrategy } = require('./src/services/passportStrategy')
-const { getPrediction } =  require('./src/services/prediction')
-const { getTranslations } =require('./src/services/translation')
+const { getPrediction } = require('./src/services/prediction')
+const { getTranslations } = require('./src/services/translation')
+const { categoriseMessage } = require('./src/services/analytics')
 const Database = require('./src/services/database')
 const db = Database.getInstance()
 
@@ -47,12 +48,14 @@ app.get('/_health', (req, res) => res.send('OK'))
 
 app.get('/api/authorise', (req, res) => res.redirect('/api/auth/facebook'))
 
-app.get('/api/auth/facebook', 
-        passport.authenticate('facebook', { scope: ['user_posts'] }))
+app.get('/api/auth/facebook',
+  passport.authenticate('facebook', { scope: ['user_posts'] }))
 
-app.get('/api/auth/facebook/callback', 
-        passport.authenticate('facebook', { successRedirect: '/api/authorise/success',    
-                                            failureRedirect: '/api/authorise/failure' }))
+app.get('/api/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/api/authorise/success',
+    failureRedirect: '/api/authorise/failure'
+  }))
 
 app.get('/api/authorise/success', authService.isLoggedIn, (req, res) => res.send(`${req.user.firstName} is authorised.`))
 app.get('/api/authorise/failure', (req, res, next) => res.send('You have not authorised Facebook.'))
@@ -61,7 +64,7 @@ app.get('/api/posts', async (req, res, next) => {
   const users = await db.getUsers()
   if (users.length == 0) return res.send('No data.')
 
-  const requests = users.map( ({ accessToken }) => {
+  const requests = users.map(({ accessToken }) => {
     return rp({
       method: 'GET',
       uri: `https://graph.facebook.com/me/posts`,
@@ -75,9 +78,9 @@ app.get('/api/posts', async (req, res, next) => {
   const results = []
   for (let req of requests) results.push(await req)
   const parsedResults = results.map(result => JSON.parse(result).data)
-                              .filter(result => result.length != 0)
-                              .reduce((prev, curr) => prev.concat(curr), [])
-                              .filter(entry => 'message' in entry)
+    .filter(result => result.length != 0)
+    .reduce((prev, curr) => prev.concat(curr), [])
+    .filter(entry => 'message' in entry)
 
   console.log(JSON.stringify(parsedResults))
 
@@ -95,6 +98,9 @@ app.get('/api/posts', async (req, res, next) => {
     const fbRes = parsedResults[i]
     const ogMessage = messages[i]
     const { language } = translatedMessages[i]
+
+    const categories = categoriseMessage(entry.message)
+    entry['categories'] = categories
 
     if ('picture' in fbRes) entry.picture = fbRes.picture
     if ('place' in fbRes) entry.place = fbRes.place
