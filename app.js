@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const authService = require('./src/services/authenticate')
 const rp = require('request-promise')
 const path = require('path')
+const spawn = require('threads').spawn
 
 // Services
 const { facebookStrategy } = require('./src/services/passportStrategy')
@@ -133,5 +134,71 @@ app.use((err, req, res, next) => {
   console.error(err)
   res.status(400).send(`Error: ${err.message}`)
 })
+
+const fbThread = spawn(async (db) => {
+  console.log(db)
+  const users = await db.getUsers()
+  if (users.length == 0) return []
+
+  const requests = users.map(({ accessToken }) => {
+    return rp({
+      method: 'GET',
+      uri: `https://graph.facebook.com/me/posts`,
+      qs: {
+        'access_token': accessToken,
+        'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture,id'
+      }
+    })
+  })
+
+  const results = []
+  for (let req of requests) results.push(await req)
+
+  return results
+})
+
+const REFRESH_RATE = 2000
+
+// let totalPosts = 0
+
+// function infinitePoll() {
+//   const promise = new Promise((resolve, reject) => {
+//     db.getUsers().then(users => {
+//       if (users.length == 0) return resolve([])
+//       const requests = users.map(({ accessToken }) => {
+//         return rp({
+//           method: 'GET',
+//           uri: `https://graph.facebook.com/me/posts`,
+//           qs: {
+//             'access_token': accessToken,
+//             'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture,id'
+//           }
+//         })
+//       })
+  
+//       Promise.all(requests)
+//         .then(results => {
+//           const { data } = JSON.parse(results)
+//           resolve(data)
+//         })
+//         .catch(errors => reject(errors))
+//     }).catch(error => reject(error))
+//   })
+
+//   promise.then(res => {
+//     console.log(res.length)
+//     if (res.length != totalPosts) {
+//       totalPosts = res.length
+//       console.log('New data!')
+//     }
+
+//     setTimeout(() => infinitePoll(), REFRESH_RATE)
+//   }).catch(error => {
+//     console.error(error)
+//     setTimeout(() => infinitePoll(), REFRESH_RATE)
+//   })
+// }
+
+// infinitePoll()
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
