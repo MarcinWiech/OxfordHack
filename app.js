@@ -67,7 +67,7 @@ app.get('/api/posts', async (req, res, next) => {
       uri: `https://graph.facebook.com/me/posts`,
       qs: {
         'access_token': accessToken,
-        'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture'
+        'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture,id'
       }
     })
   })
@@ -99,6 +99,7 @@ app.get('/api/posts', async (req, res, next) => {
     if ('place' in fbRes) entry.place = fbRes.place
     entry['created_time'] = fbRes['created_time']
     entry['language'] = language
+    entry['profile'] = `https://www.facebook.com/profile.php?id=${fbRes.id.split('_')[0]}`
 
     returnObj.push(entry)
   }
