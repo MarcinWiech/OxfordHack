@@ -18,6 +18,10 @@
         a.btn.btn-outline-primary:hover {
             color: white;
         }
+
+        .card {
+            transition: opacity 0.5s ease-in-out;
+        }
     </style>
 </head>
 
@@ -203,7 +207,10 @@
                     master[cat] = master[cat].filter(x => x != postID)
                 }
 
-                document.getElementById(postID).remove()
+                const elem = document.getElementById(postID)
+                elem.style.opacity = 0
+                setTimeout(() => elem.remove(), 500)
+                // document.getElementById(postID).remove()
             }
         }
 
