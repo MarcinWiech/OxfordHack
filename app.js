@@ -99,8 +99,8 @@ app.get('/api/posts', async (req, res, next) => {
     const ogMessage = messages[i]
     const { language } = translatedMessages[i]
 
-    const categories = categoriseMessage(entry.message)
-    entry['categories'] = categories
+    const categories = await categoriseMessage(entry.message)
+    entry['categories'] = categories.data
 
     if ('picture' in fbRes) entry.picture = fbRes.picture
     if ('place' in fbRes) entry.place = fbRes.place
