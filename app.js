@@ -20,6 +20,9 @@ const db = Database.getInstance()
 // App setup
 const PORT = process.env.PORT || 3000
 const app = express()
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+
 app.use(expressSession({ secret: 'secret', resave: true, saveUninitialized: true }))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -43,6 +46,15 @@ passport.serializeUser((user, done) => done(null, JSON.stringify(user)))
 passport.deserializeUser((obj, done) => done(null, JSON.parse(obj)))
 
 passport.use(facebookStrategy)
+
+// WebSockets
+const activeSockets = new Set()
+io.on('connection', client => {
+  client.join('all')
+  console.log('Connect!')
+  client.on('disconnect', () => console.log('Disconnect.'))
+})
+
 
 // Routes
 app.get('/_health', (req, res) => res.send('OK'))
@@ -83,8 +95,13 @@ app.get('/api/posts', async (req, res, next) => {
     .reduce((prev, curr) => prev.concat(curr), [])
     .filter(entry => 'message' in entry)
 
-  console.log(JSON.stringify(parsedResults))
+  // console.log(JSON.stringify(parsedResults))
 
+  const returnObj = await processFBData(parsedResults)
+  return res.json(returnObj)
+})
+
+async function processFBData(parsedResults) {
   const messages = parsedResults.map(entry => entry.message)
 
   // Translations
@@ -108,6 +125,7 @@ app.get('/api/posts', async (req, res, next) => {
     entry['created_time'] = fbRes['created_time']
     entry['language'] = language
     entry['profile'] = `https://www.facebook.com/profile.php?id=${fbRes.id.split('_')[0]}`
+    entry['postID'] = fbRes.id
 
     if (language != 'en') {
       entry['original_message'] = ogMessage
@@ -116,8 +134,8 @@ app.get('/api/posts', async (req, res, next) => {
     returnObj.push(entry)
   }
 
-  return res.json(returnObj)
-})
+  return returnObj
+}
 
 app.get('/reset', (req, res, next) => {
   db.delete(null).then(result => res.send('OK')).catch(error => next(error))
@@ -143,70 +161,65 @@ app.use((err, req, res, next) => {
   res.status(400).send(`Error: ${err.message}`)
 })
 
-const fbThread = spawn(async (db) => {
-  console.log(db)
-  const users = await db.getUsers()
-  if (users.length == 0) return []
-
-  const requests = users.map(({ accessToken }) => {
-    return rp({
-      method: 'GET',
-      uri: `https://graph.facebook.com/me/posts`,
-      qs: {
-        'access_token': accessToken,
-        'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture,id'
-      }
-    })
-  })
-
-  const results = []
-  for (let req of requests) results.push(await req)
-
-  return results
-})
-
 const REFRESH_RATE = 2000
 
-// let totalPosts = 0
+let init = true
+let postIds = new Set()
 
-// function infinitePoll() {
-//   const promise = new Promise((resolve, reject) => {
-//     db.getUsers().then(users => {
-//       if (users.length == 0) return resolve([])
-//       const requests = users.map(({ accessToken }) => {
-//         return rp({
-//           method: 'GET',
-//           uri: `https://graph.facebook.com/me/posts`,
-//           qs: {
-//             'access_token': accessToken,
-//             'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture,id'
-//           }
-//         })
-//       })
+function infinitePoll() {
+  const promise = new Promise((resolve, reject) => {
+    db.getUsers().then(users => {
+      if (users.length == 0) return resolve([])
+      const requests = users.map(({ accessToken }) => {
+        return rp({
+          method: 'GET',
+          uri: `https://graph.facebook.com/me/posts`,
+          qs: {
+            'access_token': accessToken,
+            'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture,id'
+          }
+        })
+      })
   
-//       Promise.all(requests)
-//         .then(results => {
-//           const { data } = JSON.parse(results)
-//           resolve(data)
-//         })
-//         .catch(errors => reject(errors))
-//     }).catch(error => reject(error))
-//   })
+      Promise.all(requests)
+        .then(results => {
+          const { data } = JSON.parse(results)
 
-//   promise.then(res => {
-//     console.log(res.length)
-//     if (res.length != totalPosts) {
-//       totalPosts = res.length
-//       console.log('New data!')
-//     }
+          const parsedResults = data.filter(result => result.length != 0)
+            .reduce((prev, curr) => prev.concat(curr), [])
+            .filter(entry => 'message' in entry)
 
-//     setTimeout(() => infinitePoll(), REFRESH_RATE)
-//   }).catch(error => {
-//     console.error(error)
-//     setTimeout(() => infinitePoll(), REFRESH_RATE)
-//   })
-// }
+          processFBData(parsedResults).then(data => resolve(data)).catch(errors => reject(errors))
+        })
+        .catch(errors => reject(errors))
+    }).catch(error => reject(error))
+  })
 
-// infinitePoll()
+  promise.then(res => {
+    console.log(res)
+    const additions = []
+    for (let data of res) {
+      const { postID } = data
+      if (!postIds.has(postID)) {
+        postIds.add(postID)
+        additions.push(data)
+      }
+    }
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
+    if (additions.length != 0 && !init) {
+      console.log('Emitting!')
+      io.emit('all', JSON.stringify(additions))
+    }
+  
+    init = false
+    
+    setTimeout(() => infinitePoll(), REFRESH_RATE)
+  }).catch(error => {
+    console.error(error)
+    setTimeout(() => infinitePoll(), REFRESH_RATE)
+  })
+}
+
+infinitePoll()
+
+server.listen(PORT, () => console.log(`Listening on port ${PORT}...`))

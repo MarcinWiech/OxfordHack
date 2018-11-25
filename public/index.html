@@ -195,5 +195,23 @@
 
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+<script>
+    const socket = io('http://localhost:3000')
+
+    socket.on('connect', () => {
+        console.log('hello')
+    })
+
+    socket.on('all', data => {
+        JSON.parse(data).forEach(elem => {
+            const newHTML = buildCard(elem)
+            const currHTML = document.getElementById('res').innerHTML
+            document.getElementById('res').innerHTML = newHTML + currHTML
+        })
+    })
+
+</script>
+
 </body>
 </html>
