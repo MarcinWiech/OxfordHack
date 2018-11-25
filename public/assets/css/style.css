@@ -48,3 +48,7 @@ body {
 .fa:hover {
     opacity: 0.7;
 }
+
+.sideitem {
+    list-style-type: none;
+}

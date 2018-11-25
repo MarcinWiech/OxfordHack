@@ -18,15 +18,12 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav" style="width: 100%">
+        <ul class="navbar-nav justify-content-center" style="width: 100%">
             <li class="nav-item active">
                 <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../src/Heatmap/heatmap.js-master/examples/googlemaps-heatmap/index.html">Map</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="emergency.html">Emergency Contacts</a>
             </li>
         </ul>
         <div style="float: right; width: 100%">
@@ -47,39 +44,39 @@
                     </div>
 
                 <div class="card">
-                    <div aria-labelledby="headingTwo" data-parent="#accordionExample" style="padding-left: 5%">
-                        <div class="card-body" style="color: #0d5baa">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#" style="font-size:1vw;">Clothes <span class="sr-only" >(current)</span></a>
+                    <div aria-labelledby="headingTwo" data-parent="#accordionExample" style="padding-left: 4%">
+                        <div class="card-body" style="color: #0d5baa"></div>
+                            <li class="nav-item active sideitem">
+                                <a class="nav-link" href="clothes.html" style="font-size:1vw;">Clothes <span class="sr-only" >(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Toiletries <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Baby Supplies <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Fuel <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Pet Supplies <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Equipment <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Water<span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Shelter<span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Food<span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Other<span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Volunteer Work<span class="sr-only">(current)</span></a>
                             </li>
                         </div>
@@ -87,29 +84,28 @@
                 </div>
 
             </div>
-
-        </div>
-        <div class="col-8 shadow-sm p-3 mb-5 bg-white rounded" style="margin-top:50px; z-index: 10; padding: 0 !important;">
-            <div class="col" style="padding: 0 !important;">
-                <div style="position: relative;text-align: center;">
-                    <img src="assets/image.jpg" class="img-responsive" alt="Cinque Terre" style="width: 100%; box-shadow: 0 30px 30px -30px rgba(0,0,0,.3); z-index: 20">
-                    <div class="centered"><b style="font-size:3vw;">Where supermen are born</b></div>
-
-                </div>
-                <div style="padding: 1rem">
-
-                    <div id="res">
-
-
-
-
-
-
+            <div class="col-8 shadow-sm p-3 mb-5 bg-white rounded" style="margin-top:50px; z-index: 10; padding: 0 !important;">
+                <div class="col" style="padding: 0 !important;">
+                    <div style="position: relative;text-align: center;">
+                        <img src="assets/image.jpg" class="img-responsive" alt="Cinque Terre" style="width: 100%; box-shadow: 0 30px 30px -30px rgba(0,0,0,.3); z-index: 20">
+                        <div class="centered"><b style="font-size:3vw;">Where supermen are born</b></div>
+    
+                    </div>
+                    <div style="padding: 1rem">
+    
+                        <div id="res">
+    
+    
+    
+    
+    
+    
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-2"></div>
         </div>
-        <div class="col-2"></div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -139,7 +135,7 @@
         type: 'GET',
         url: 'http://localhost:3000/api/posts',
         success: msg => msg.forEach(obj => document.getElementById('res').innerHTML += buildCard(obj)),
-        error: err => alert(JSON.stringify(err))
+        error: err => console.error(JSON.stringify(err))
     })
 
     function buildCard(response) {
