@@ -26,7 +26,7 @@ async function getTweets() {
         message.message = words.slice(1).join(' ')
 
         message.postID = message.messageId
-        queue.deleteMessage('oxfordhack', message.message, message.popReceipt, (err) => {
+        queue.deleteMessage('oxfordhack', message.message, message.popReceipt, (error) => {
           if (!error) console.log(`${message.messageId} deleted.`)
         })
       })

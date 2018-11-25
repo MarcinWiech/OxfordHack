@@ -1,4 +1,4 @@
-const ENABLE_REFRESH = false
+const ENABLE_REFRESH = true
 
 // Dependencies
 const express = require('express')
