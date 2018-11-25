@@ -220,6 +220,10 @@
         function buildCard(response) {
             const { message, danger, place, created_time, profile, original_message, language, postID } = response;
 
+            if(danger === false){
+                return ``;
+            }
+
             let margin = `0`;
             let placeName = ``;
             if (place !== undefined) {
@@ -252,8 +256,9 @@
             //     }
 
             // }
+            
 
-            return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;" id="${postID}">
+            return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'white' : 'white'} rounded" style="margin: 0.5rem !important;" id="${postID}">
                         <div class="card-body">
                             <p style="float: right">${placeName}</p>
                             <p style="float: right; margin-right: ${margin}%">Date posted: ${created_time}</p>
