@@ -14,17 +14,17 @@ async function getTweets() {
         console.error(error)
         return reject(error)
       }
-      const message = results[0]
 
-      // TODO delete message
-
-      message.messageText = encoder.decode(message.messageText)
-
-      resolve(message)
+      results.forEach(message => {
+        message.message = encoder.decode(message.messageText)
+      })
+      
+      resolve(results)
     })
   })
 
-  return await promise
+  const res = await promise
+  return res
 }
 
 module.exports = {

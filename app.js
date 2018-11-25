@@ -78,7 +78,12 @@ app.get('/api/authorise/failure', (req, res, next) => res.send('You have not aut
 
 app.get('/api/posts', async (req, res, next) => {
   const fbData = await getFBPosts()
-  return res.json(fbData)
+  fbData.forEach(data => data.source = 'facebook')
+
+  const tweets = await getTweets()
+  tweets.forEach(data => data.source = 'twitter')
+
+  return res.json(fbData.concat(tweets))
 })
 
 async function getFBPosts() {
