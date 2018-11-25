@@ -18,6 +18,11 @@ async function getTweets() {
       results.forEach(message => {
         message.message = encoder.decode(message.messageText)
         message.postID = message.messageId
+
+
+        queue.deleteMessage('oxfordhack', message.message, message.popReceipt, (err) => {
+          if (!error) console.log(`${message.messageId} deleted.`)
+        })
       })
       
       resolve(results)

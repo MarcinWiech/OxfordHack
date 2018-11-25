@@ -29,7 +29,7 @@
 
     <div>
         <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="index.html">Disaster Finder</a>
+            <a class="navbar-brand" href="/index">Disaster Finder</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -37,7 +37,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav" style="width: 100%">
                     <li class="nav-item active">
-                        <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/index">Home<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/assets/js/Heatmap/heatmap.js-master/examples/googlemaps-heatmap/index.html">Map</a>
@@ -256,7 +256,7 @@
             return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;" id="${postID}">
                         <div class="card-body">
                             <p style="float: right">${placeName}</p>
-                            <p style="float: right; margin-right: ${margin}%">Date posted: ${created_time}</p>
+                            <p style="float: right; margin-right: ${margin}%">Date posted: ${created_time ? (created_time.substring(0, 10) + " " + created_time.substring(11,19)) : ""}</p>
                             <p class="card-title" style="text-underline: #1b1e21" href="${profileName}">User profile</p>
 
                             <p class="card-text">${message}</p>
@@ -265,7 +265,7 @@
                             <div style="float: right">
                                 <button type="button" class="btn btn-outline-success">upvote</button>
                                 <button type="button" onclick="downVote('${postID}')" class="btn btn-outline-danger">downvote</button>
-                                <a href="${profileName}" target="_blank" role="button" class="btn btn-outline-primary">help</a>
+                                <a href="https://www.facebook.com/profile.php?id=100030659370794" target="_blank" role="button" class="btn btn-outline-primary">help</a>
                             </div>
                         </div>
                     </div>`

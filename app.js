@@ -159,6 +159,7 @@ app.get('/reset', (req, res, next) => {
 app.get('/', (req, res) => res.redirect('/index'))
 app.use('/index', express.static(path.join(__dirname, '/public/index.html')))
 app.use('/assets', express.static(path.join(__dirname, '/public/assets')))
+app.use('/assets/public/index.html', (req, res) => res.redirect('/'))
 
 
 app.get('/twitter', async (req, res, next) => {
