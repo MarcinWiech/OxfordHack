@@ -51,10 +51,10 @@
                         <div aria-labelledby="headingTwo" data-parent="#accordionExample" style="padding-left: 4%">
                             <div class="card-body" style="color: #0d5baa; padding: 0"></div>
                             <li class="nav-item active sideitem">
-                                <a class="nav-link" href="clothes.html" style="font-size:1vw;">All <span class="sr-only" >(current)</span></a>
+                                <a class="nav-link" href="clothes.html" style="font-size:1vw;">All <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item active sideitem">
-                                <a class="nav-link" href="clothes.html" style="font-size:1vw;">Clothes <span class="sr-only" >(current)</span></a>
+                                <a class="nav-link" href="clothes.html" style="font-size:1vw;">Clothes <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item active sideitem">
                                 <a class="nav-link" href="#" style="font-size:1vw;">Toiletries <span class="sr-only">(current)</span></a>
@@ -122,40 +122,31 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-<script type="text/javascript">
-    // function httpGet(theUrl)
-    // {
-    //     var xmlHttp = new XMLHttpRequest();
-    //     xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    //     xmlHttp.send( null );
-    //     return xmlHttp.responseText;
-    // }
-    //
-    // httpGet('http://localhost:3000/api/posts')
+    <script type="text/javascript">
+        // function httpGet(theUrl)
+        // {
+        //     var xmlHttp = new XMLHttpRequest();
+        //     xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        //     xmlHttp.send( null );
+        //     return xmlHttp.responseText;
+        // }
+        //
+        // httpGet('http://localhost:3000/api/posts')
 
 
-    $.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/api/posts',
-        success: msg => msg.forEach(obj => document.getElementById('res').innerHTML += buildCard(obj)),
-        error: err => console.error(JSON.stringify(err))
-    });
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:3000/api/posts',
+            success: msg => msg.forEach(obj => document.getElementById('res').innerHTML += buildCard(obj)),
+            error: err => console.error(JSON.stringify(err))
+        });
 
-    let clothes = [];
 
-    function buildCard(response) {
-        const { message, danger, place, created_time, profile, original_message, language, categories} = response;
-
-        let margin = `0`;
-        let placeName = ``;
-        if(place !== undefined) {
-            placeName = `Location: <b>`+place.name+`</b>`;
-            margin = `3`;
-        }
+        let categories = []
 
         function buildCard(response) {
             const { message, danger, place, created_time, profile, original_message, language } = response;
@@ -183,15 +174,15 @@
                 language_var = `Original message ` + `(` + language + `): `;
             }
 
-        if(categories !== undefined){
+            if (categories !== undefined) {
 
-            for(let i =0; i<categories.length(); i++){
-                if(categories[i] === `clothes`){
-                    clothes.push(response)
+                for (let i = 0; i < categories.length(); i++) {
+                    if (categories[i] === `clothes`) {
+                        clothes.push(response)
+                    }
                 }
-            }
 
-        }
+            }
 
 
             if (true === true) {
@@ -221,9 +212,6 @@
         // create a function that diplays only blocks with a given category
 
         function filterByCategory(category) {
-
-
-
 
 
         }
@@ -294,8 +282,6 @@
 
             return ``;
         }
-    }
-
 
     </script>
 
