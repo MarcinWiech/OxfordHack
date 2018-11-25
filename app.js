@@ -180,62 +180,62 @@ server.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
 if (ENABLE_REFRESH) {
   const REFRESH_RATE = 2000
 
-let init = true
-let postIds = new Set()
+  let init = true
+  let postIds = new Set()
 
-function infinitePoll() {
-  const promise = new Promise((resolve, reject) => {
-    db.getUsers().then(users => {
-      if (users.length == 0) return resolve([])
-      const requests = users.map(({ accessToken }) => {
-        return rp({
-          method: 'GET',
-          uri: `https://graph.facebook.com/me/posts`,
-          qs: {
-            'access_token': accessToken,
-            'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture,id'
-          }
+  function infinitePoll() {
+    const promise = new Promise((resolve, reject) => {
+      db.getUsers().then(users => {
+        if (users.length == 0) return resolve([])
+        const requests = users.map(({ accessToken }) => {
+          return rp({
+            method: 'GET',
+            uri: `https://graph.facebook.com/me/posts`,
+            qs: {
+              'access_token': accessToken,
+              'fields': 'message,created_time,place,message_tags,story_tags,with_tags,story,picture,id'
+            }
+          })
         })
-      })
-  
-      Promise.all(requests)
-        .then(results => {
-          const { data } = JSON.parse(results)
 
-          const parsedResults = data.filter(result => result.length != 0)
-            .reduce((prev, curr) => prev.concat(curr), [])
-            .filter(entry => 'message' in entry)
+        Promise.all(requests)
+          .then(results => {
+            const { data } = JSON.parse(results)
 
-          processFBData(parsedResults).then(data => resolve(data)).catch(errors => reject(errors))
-        })
-        .catch(errors => reject(errors))
-    }).catch(error => reject(error))
-  })
+            const parsedResults = data.filter(result => result.length != 0)
+              .reduce((prev, curr) => prev.concat(curr), [])
+              .filter(entry => 'message' in entry)
 
-  promise.then(res => {
-    console.log('Refreshed!')
-    const additions = []
-    for (let data of res) {
-      const { postID } = data
-      if (!postIds.has(postID)) {
-        postIds.add(postID)
-        additions.push(data)
+            processFBData(parsedResults).then(data => resolve(data)).catch(errors => reject(errors))
+          })
+          .catch(errors => reject(errors))
+      }).catch(error => reject(error))
+    })
+
+    promise.then(res => {
+      console.log('Refreshed!')
+      const additions = []
+      for (let data of res) {
+        const { postID } = data
+        if (!postIds.has(postID)) {
+          postIds.add(postID)
+          additions.push(data)
+        }
       }
-    }
 
-    if (additions.length != 0 && !init) {
-      console.log('Emitting!')
-      io.emit('all', JSON.stringify(additions))
-    }
-  
-    init = false
-    
-    setTimeout(() => infinitePoll(), REFRESH_RATE)
-  }).catch(error => {
-    console.error(error)
-    setTimeout(() => infinitePoll(), REFRESH_RATE)
-  })
-}
+      if (additions.length != 0 && !init) {
+        console.log('Emitting!')
+        io.emit('all', JSON.stringify(additions))
+      }
 
-infinitePoll()
+      init = false
+
+      setTimeout(() => infinitePoll(), REFRESH_RATE)
+    }).catch(error => {
+      console.error(error)
+      setTimeout(() => infinitePoll(), REFRESH_RATE)
+    })
+  }
+
+  infinitePoll()
 }

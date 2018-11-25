@@ -17,6 +17,7 @@ async function getTweets() {
 
       results.forEach(message => {
         message.message = encoder.decode(message.messageText)
+        message.postID = message.messageId
       })
       
       resolve(results)
