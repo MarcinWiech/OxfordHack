@@ -93,6 +93,7 @@ app.get('/api/posts', async (req, res, next) => {
   for (let i = 0; i < result.length; ++i) {
     const entry = result[i]
     const fbRes = parsedResults[i]
+    const ogMessage = messages[i]
     const { language } = translatedMessages[i]
 
     if ('picture' in fbRes) entry.picture = fbRes.picture
@@ -100,6 +101,10 @@ app.get('/api/posts', async (req, res, next) => {
     entry['created_time'] = fbRes['created_time']
     entry['language'] = language
     entry['profile'] = `https://www.facebook.com/profile.php?id=${fbRes.id.split('_')[0]}`
+
+    if (language != 'en') {
+      entry['original_message'] = ogMessage
+    }
 
     returnObj.push(entry)
   }
