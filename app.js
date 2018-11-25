@@ -11,6 +11,7 @@ const path = require('path')
 // Services
 const { facebookStrategy } = require('./src/services/passportStrategy')
 const { getPrediction } =  require('./src/services/prediction')
+const { getTranslations } =require('./src/services/translation')
 const Database = require('./src/services/database')
 const db = Database.getInstance()
 
@@ -81,16 +82,23 @@ app.get('/api/posts', async (req, res, next) => {
   console.log(JSON.stringify(parsedResults))
 
   const messages = parsedResults.map(entry => entry.message)
-  const result = await getPrediction(messages)
+
+  // Translations
+  const translatedMessages = await getTranslations(messages)
+
+  // Prediction  
+  const result = await getPrediction(translatedMessages.map(translation => translation.text))
   const returnObj = []
 
   for (let i = 0; i < result.length; ++i) {
     const entry = result[i]
     const fbRes = parsedResults[i]
+    const { language } = translatedMessages[i]
 
     if ('picture' in fbRes) entry.picture = fbRes.picture
     if ('place' in fbRes) entry.place = fbRes.place
     entry['created_time'] = fbRes['created_time']
+    entry['language'] = language
 
     returnObj.push(entry)
   }

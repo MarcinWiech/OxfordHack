@@ -29,7 +29,8 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "tedious": "^3.0.1",
-    "tedious-promises": "^0.4.1"
+    "tedious-promises": "^0.4.1",
+    "uuidv4": "^2.0.0"
   },
   "devDependencies": {
     "morgan": "^1.9.1",
