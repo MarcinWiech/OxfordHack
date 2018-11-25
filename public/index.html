@@ -122,30 +122,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
 
-<<<<<<< Updated upstream
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-
-    <script type="text/javascript">
-        // function httpGet(theUrl)
-        // {
-        //     var xmlHttp = new XMLHttpRequest();
-        //     xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-        //     xmlHttp.send( null );
-        //     return xmlHttp.responseText;
-        // }
-        //
-        // httpGet('http://localhost:3000/api/posts')
-
-
-        $.ajax({
-            type: 'GET',
-            url: 'http://localhost:3000/api/posts',
-            success: msg => msg.forEach(obj => document.getElementById('res').innerHTML += buildCard(obj)),
-            error: err => console.error(JSON.stringify(err))
-        })
-=======
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -180,7 +156,6 @@
             placeName = `Location: <b>`+place.name+`</b>`;
             margin = `3`;
         }
->>>>>>> Stashed changes
 
         function buildCard(response) {
             const { message, danger, place, created_time, profile, original_message, language } = response;

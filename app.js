@@ -82,6 +82,7 @@ app.get('/api/posts', async (req, res, next) => {
 
   const tweets = await getTweets()
   tweets.forEach(data => data.source = 'twitter')
+  console.log(tweets)
 
   return res.json(fbData.concat(tweets))
 })
