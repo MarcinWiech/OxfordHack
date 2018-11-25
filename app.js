@@ -127,6 +127,14 @@ app.get('/reset', (req, res, next) => {
 app.get('/', (req, res) => res.redirect('/index'))
 app.use('/index', express.static(path.join(__dirname, '/public/index.html')))
 app.use('/assets', express.static(path.join(__dirname, '/public/assets')))
+
+const { getTweet } = require('./src/services/twitter')
+app.get('/twitter', async (req, res, next) => {
+  const result = await getTweet()
+  console.log(result)
+  res.send('OK')
+})
+
 app.use('*', (req, res, next) => next(new Error('Cannot get path.')))
 
 // Error handler
