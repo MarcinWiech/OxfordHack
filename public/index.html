@@ -23,7 +23,7 @@
                 <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="map.html">Map</a>
+                <a class="nav-link" href="../src/Heatmap/heatmap.js-master/examples/googlemaps-heatmap/index.html">Map</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="emergency.html">Emergency Contacts</a>
@@ -38,7 +38,7 @@
 </div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-2" style="margin-top:70px; z-index: 10;">
+        <div class="col-2" style="margin-top:90px; z-index: 10;">
             <div class="accordion" id="accordionExample">
                 <div class="p-1 mb-1 bg-light text-dark" style="text-align: center; height: 60px">
                     <div style="  position: relative; float: left; top: 50%; left: 50%; transform: translate(-50%, -50%);">
@@ -145,7 +145,7 @@
     function buildCard(response) {
         const { message, danger, place, created_time, profile, original_message, language} = response;
 
-        let margin = `0`
+        let margin = `0`;
         let placeName = ``;
         if(place !== undefined) {
             placeName = `Location: <b>`+place.name+`</b>`;
@@ -171,6 +171,85 @@
 
 
         if(true === true) {
+            return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;">
+                            <div class="card-body">
+                                <p style="float: right">${placeName}</p>
+                                <p style="float: right; margin-right: ${margin}%">Date posted: ${created_time}</p>
+                                <p class="card-title" style="text-underline: #1b1e21">${profileName}</p>
+
+                                <p class="card-text">${message}</p>
+                                <p class="card-text">${language_var} ${original_message_var}</p>
+
+                                <div style="float: right">
+                                    <button type="button" class="btn btn-outline-success">upvote</button>
+                                    <button type="button" class="btn btn-outline-danger">downvote</button>
+                                    <button type="button" class="btn btn-outline-primary">helping</button>
+                                </div>
+                            </div>
+                        </div>`
+        }
+
+        return ``;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // create a function that diplays only blocks with a given category
+
+    function filterByCategory(category){
+
+
+
+
+
+    }
+
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/api/posts',
+        success: msg => msg.forEach(obj => document.getElementById('res').innerHTML += buildCardWithCategory(obj,filterByCategory())),
+        error: err => alert(JSON.stringify(err))
+    })
+
+    function buildCardWithCategory(response, filteredCategory) {
+        const { message, danger, place, created_time, profile, original_message, language, category} = response;
+
+        let containsCategory = false;
+
+        for(let i = 0; i<category.length(); i++){
+
+            if(category[i] === filteredCategory){
+                containsCategory = true;
+            }
+
+        }
+
+        let margin = `0`;
+        let placeName = ``;
+        if(place !== undefined) {
+            placeName = `Location: <b>`+place.name+`</b>`;
+            margin = `3`;
+        }
+
+        let profileName = ``;
+        if(profile !== undefined) {
+            profileName = profile;
+        }
+
+        let original_message_var = ``;
+        if(original_message !== undefined) {
+            original_message_var = original_message;
+        }
+
+        let language_var = ``;
+
+        if(language !== undefined && original_message !== undefined) {
+            language_var = `Original message `+`(`+language+`): `;
+        }
+
+
+
+        if(true === true && containsCategory) {
             return `<div class="card shadow-sm p-3 mb-5 bg-${danger ? 'danger' : 'white'} rounded" style="margin: 0.5rem !important;">
                             <div class="card-body">
                                 <p style="float: right">${placeName}</p>

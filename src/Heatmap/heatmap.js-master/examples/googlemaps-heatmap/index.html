@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>Googlemaps Heatmap Layer</title>
+    <style>
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0; font-family:sans-serif; }
+      #map-canvas { height: 100% }
+      h1 { position:absolute; background:black; color:white; padding:10px; font-weight:200; z-index:10000;}
+      #all-examples-info { position:absolute; background:white; font-size:16px; padding:20px; bottom:20px; width:350px; line-height:150%; border:1px solid rgba(0,0,0,.2);}
+    </style>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="../../build/heatmap.js"></script>
+    <script src="../../plugins/gmaps-heatmap/gmaps-heatmap.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../../../public/assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  </head>
+  <body>
+  <div>
+    <nav class="navbar navbar-expand-lg">
+      <a class="navbar-brand" href="../../../../../public/index.html">Disaster Finder</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="../../../../../public/index.html">Home<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Map</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../../../../../public/emergency.html">Emergency Contacts</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8 shadow-sm p-3 mb-5 bg-white rounded" style="margin-top:80px; z-index: 10; padding: 0 !important;">
+        <div style="text-align: center;padding-top: 20px">
+          <b style="font-size:3vw; color: #959595">Geographic areas in need of assistance</b>
+        </div>
+        <div class="col" style="padding-top: 20px">
+          <div style="position: relative;text-align: center; background-color: #f23d33">
+            <div id="map-canvas" style="min-height: 900px"></div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-2"></div>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script src="script.js"></script>
+  <script src="invoke.js"></script>
+  </body>
+</html>
